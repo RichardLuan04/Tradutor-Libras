@@ -8,7 +8,6 @@ Palavras que não precisa de movimento:
 - Legal
 - Altura
 - Baixo
-- 1...9
-- G, M
+- 1, 2, 3, 4, 5, 6, 7, 8, 9 
 
 No dia 7/05/23
