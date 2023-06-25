@@ -5,8 +5,8 @@ from keras.optimizers import SGD, Adam
 from keras import backend
 from PIL import Image
 import tensorflow as tf
-#import tensorflow_datasets as tfds
-#from sklearn.metrics import classification_report
+# import tensorflow_datasets as tfds
+# from sklearn.metrics import classification_report
 import numpy as np
 import datetime
 import h5py
@@ -23,7 +23,7 @@ def getTimeMin(start, end):
 
 
 EPOCHS = 20  # Quantidade de vezes que o codigo irá repetir o treino
-CLASS = 22  # Quantidade de Letras
+CLASS = 32  # Quantidade de Letras
 FILE_NAME = 'Model_Libras_'
 
 print("\n\n ----------------------INICIO --------------------------\n")
@@ -50,24 +50,25 @@ test_dataset = tf.keras.utils.image_dataset_from_directory(
     seed=123)
 
 model = tf.keras.Sequential([
-  tf.keras.layers.Lambda(lambda x: x/255.0), # Normalização dos valores dos pixels entre 0 e 1
-  tf.keras.layers.Conv2D(32, 3, padding='same', activation='relu'),
-  tf.keras.layers.BatchNormalization(),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(64, 3, padding='same', activation='relu'),
-  tf.keras.layers.BatchNormalization(),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(128, 3, padding='same', activation='relu'),
-  tf.keras.layers.BatchNormalization(),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(256, 3, padding='same', activation='relu'),
-  tf.keras.layers.BatchNormalization(),
-  tf.keras.layers.MaxPooling2D(),
-  
-  tf.keras.layers.Flatten(),
-  tf.keras.layers.Dense(512, activation='relu'),
-  tf.keras.layers.Dropout(0.5),
-  tf.keras.layers.Dense(CLASS, activation='softmax')
+    # Normalização dos valores dos pixels entre 0 e 1
+    tf.keras.layers.Lambda(lambda x: x/255.0),
+    tf.keras.layers.Conv2D(32, 3, padding='same', activation='relu'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.Conv2D(64, 3, padding='same', activation='relu'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.Conv2D(128, 3, padding='same', activation='relu'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.Conv2D(256, 3, padding='same', activation='relu'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.MaxPooling2D(),
+
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(512, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(CLASS, activation='softmax')
 ])
 
 
@@ -75,22 +76,24 @@ print("[INFO] Inicializando e otimizando a CNN...")
 start = time.time()
 
 model.compile(
-  optimizer='adam',
-  loss='sparse_categorical_crossentropy',
-  metrics=['accuracy'])
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy'])
 
-model.fit(
-  train_dataset,
-  validation_data=test_dataset,
-  epochs=EPOCHS
+classifier = model.fit(
+    train_dataset,
+    epochs=EPOCHS,
+    validation_data=test_dataset,
+    shuffle=True,
+    verbose=2
 )
 
 print("[INFO] Salvando modelo treinado ...")
 
 # Para todos arquivos ficarem com a mesma data e hora. Armazeno na variavel
 file_date = getDateStr()
-model.save('./Prototypes/'+FILE_NAME+file_date+'.h5')
-print('[INFO] modelo: ./Prototypes/'+FILE_NAME+file_date+'.h5 salvo!')
+model.save('./prototypes/'+FILE_NAME+file_date+'.h5')
+print('[INFO] modelo: ./prototypes/'+FILE_NAME+file_date+'.h5 salvo!')
 
 end = time.time()
 
@@ -100,8 +103,7 @@ print('[INFO] Summary: ')
 model.summary()
 
 print("\n[INFO] Avaliando a CNN...")
-score = model.evaluate_generator(generator=test_dataset, steps=(
-    test_dataset.n // test_dataset.batch_size), verbose=1)
+score = model.evaluate(test_dataset, verbose=1)
 print('[INFO] Accuracy: %.2f%%' % (score[1]*100), '| Loss: %.5f' % (score[0]))
 
 print('\n[INFO] [FIM]: ' + getDateStr())
