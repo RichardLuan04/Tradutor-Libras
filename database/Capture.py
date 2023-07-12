@@ -42,7 +42,6 @@ def capture_images(letter, name):
     
 
         if cv2.waitKey(1) == ESC:
-
             if t_counter <= QTD_TRAIN:
                 img_name = pathTraining + str(letter) + "/"+name+"{}.png".format(training_set_image_name)
                 save_img = cv2.resize(result, (image_x, image_y))
