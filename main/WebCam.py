@@ -6,10 +6,19 @@ from keras.utils import load_img, img_to_array
 
 image_x, image_y = 64, 64
 
-classifier = load_model('./Prototypes/Model_Libras_04_05_2023_01_42.h5')
+classifier = load_model('./model.h5')
 
-classes = 22
-letras = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F', '6': 'G', '7': 'I', '8': 'K',
+classes = classifier.output_shape[-1]
+letras = {'0': '1', '1': '2', '2': '3', '3': '4', '4': '5', '5': '6', '6': '7',
+          '7': '9', '8': 'A', '9': 'Abracar', '10': 'Ainda', '11': 'Ajudar', '12': 'Alface',
+          '13': 'B', '14': 'Banco', '15': 'C', '16': 'Cachorro', '17': 'Coruja', '18': 'Cuidar',
+          '19': 'D', '20': 'E', '21': 'Eu amo voce', '22': 'F', '23': 'G', '24': 'I', '25': 'K',
+          '26': 'L', '27': 'Loja', '28': 'M', '29': 'Meu', '30': 'Morar', '31': 'Morcego',
+          '32': 'N', '33': 'O', '34': 'P', '35': 'Posto de abastecimento', '36': 'Q', '37': 'Quarta-feira',
+          '38': 'Quinta-feira', '39': 'R', '40': 'S', '41': 'Segunda-feira', '42': 'T', '43': 'Terca-feira',
+          '44': 'U', '45': 'V', '46': 'Voce', '47': 'W', '48': 'Y'}
+
+letrass = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F', '6': 'G', '7': 'I', '8': 'K',
         '9': 'L', '10': 'M', '11': 'N', '12': 'O', '13': 'P', '14': 'Q', '15': 'R', '16': 'S', '17': 'T',
         '18': 'U', '19': 'V', '20': 'W', '21': 'Y'}
 

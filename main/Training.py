@@ -3,6 +3,7 @@ from keras.callbacks import EarlyStopping
 from keras.utils import to_categorical, plot_model
 from keras.optimizers import SGD, Adam
 from keras import backend
+import keras
 from PIL import Image
 import tensorflow as tf
 # import tensorflow_datasets as tfds
@@ -22,8 +23,8 @@ def getTimeMin(start, end):
     return (end - start)/60
 
 
-EPOCHS = 20  # Quantidade de vezes que o codigo irá repetir o treino
-CLASS = 32  # Quantidade de Letras
+EPOCHS = 200  # Quantidade de vezes que o codigo irá repetir o treino
+CLASS = 49  # Quantidade de Letras
 FILE_NAME = 'Model_Libras_'
 
 print("\n\n ----------------------INICIO --------------------------\n")
@@ -80,12 +81,20 @@ model.compile(
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy'])
 
+callbacks_list = [
+    keras.callbacks.ModelCheckpoint(
+        filepath='model.h5',
+        monitor='val_loss', save_best_only=True, verbose=1),
+    keras.callbacks.EarlyStopping(monitor='val_loss', patience=30,verbose=1)
+]
+
 classifier = model.fit(
     train_dataset,
     epochs=EPOCHS,
     validation_data=test_dataset,
     shuffle=True,
-    verbose=2
+    verbose=1,
+    callbacks=callbacks_list
 )
 
 print("[INFO] Salvando modelo treinado ...")
